@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+venv/
+
+# Secrets/env
+.env
+.env.*
+!.env.example
+
+# Local databases/reports/logs
+*.db
+reports/*.csv
+reports/*.txt
+*.log
+threatlens.log
+threatlens.err.log
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

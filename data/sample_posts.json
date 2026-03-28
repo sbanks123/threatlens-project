@@ -1,0 +1,52 @@
+[
+  {
+    "source": "Public Forum Security",
+    "title": "General cyber hygiene tips",
+    "content": "Use MFA and rotate passwords regularly."
+  },
+  {
+    "source": "Credential Leak Monitoring",
+    "title": "Fresh NPCI credential dump",
+    "content": "admin@bank.in:Pass@123 and token=ABCD1234EFGH5678 found in dump. selling access"
+  },
+  {
+    "source": "Reddit Cyberintel",
+    "title": "Discussion on targeting IRCTC infra",
+    "content": "possible exploit chain on irctc portal, attack plan shared soon"
+  },
+  {
+    "source": "Forum India Cyber",
+    "title": "RBI payment gateway misconfig discussion",
+    "content": "rbi linked payment gateway issue may expose credentials if admin panel is open"
+  },
+  {
+    "source": "Paste Archive",
+    "title": "UIDAI dataset mention",
+    "content": "alleged aadhaar records with api_key=QWERTYUIOPASDFGHZXCV123456 shared by actor"
+  },
+  {
+    "source": "Public Tech Blog",
+    "title": "How to secure BSNL routers",
+    "content": "Educational post on patching and secure defaults, no attack activity"
+  },
+  {
+    "source": "Threat Board",
+    "title": "ISRO endpoint recon talk",
+    "content": "members discussing recon and exploit feasibility against isro endpoint"
+  },
+  {
+    "source": "Intel Forum",
+    "title": "Power Grid phishing campaign chatter",
+    "content": "phishing campaign targeting power grid employees with credential harvest links"
+  },
+  {
+    "source": "Chat Expor Leak",
+    "title": "Airtel internal portal access sale",
+    "content": "selling access to telecom admin panel, includes secret=REDACTED_TEST_SECRET_TOKEN"
+  },
+  {
+    "source": "Research Forum",
+    "title": "NTPC cybersecurity policy update",
+    "content": "policy review and defensive recommendations"
+  }
+]

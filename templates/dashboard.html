@@ -1,0 +1,432 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Samuel's Trusted Cloud Solutions • Command Center</title>  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+  :root{
+    --bg:#050505; --bg2:#0a0a0a; --card:#111111; --line:#2a2a2a;
+    --txt:#ffffff; --muted:#aaaaaa;
+    --red:#ef1b1b; --redDark:#a10f0f;
+    --green:#22c55e; --amber:#f59e0b;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+
+  body{
+    margin:0;
+    color:var(--txt);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+    background:
+      radial-gradient(1000px 600px at 90% -10%, rgba(239,27,27,.14), transparent 60%),
+      radial-gradient(900px 500px at -10% 15%, rgba(255,255,255,.04), transparent 60%),
+      linear-gradient(160deg,var(--bg),var(--bg2));
+    min-height:100vh;
+  }
+
+  .preloader{
+    position:fixed; inset:0; z-index:999; background:#050505;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; transition:.45s
+  }
+  .preloader.hide{opacity:0;visibility:hidden}
+  .orb{
+    width:82px; height:82px; border-radius:50%;
+    background:conic-gradient(from 0deg,#ffffff,#ef1b1b,#7a0a0a,#ffffff);
+    animation:spin 1.2s linear infinite;
+    box-shadow:0 0 40px rgba(239,27,27,.35)
+  }
+  .orb::after{
+    content:''; display:block; width:56px; height:56px; border-radius:50%;
+    background:#080808; margin:13px
+  }
+  .preTxt{margin-top:12px;color:#d8d8d8}
+
+  .layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+
+  .sidebar{
+    border-right:1px solid #1f1f1f;
+    background:rgba(8,8,8,.92);
+    backdrop-filter:blur(10px);
+    padding:20px;
+    position:sticky;
+    top:0;
+    height:100vh
+  }
+
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800}
+  .badge{
+    width:34px;height:34px;border-radius:10px;
+    background:linear-gradient(135deg,#ef1b1b,#a10f0f);
+    display:grid;place-items:center;color:#ffffff
+  }
+
+  .nav{margin-top:28px;display:flex;flex-direction:column;gap:10px}
+  .nav a{
+    color:#e4e4e4;text-decoration:none;padding:10px 12px;
+    border:1px solid #3a1a1a;border-radius:10px;background:#111111;transition:.2s
+  }
+  .nav a:hover{border-color:#ef1b1b;color:#fff;transform:translateX(2px)}
+  .nav a.active{border-color:#ef1b1b;color:#fff;box-shadow:0 0 0 1px rgba(239,27,27,.25) inset}
+  .sideMeta{margin-top:20px;color:var(--muted);font-size:12px;line-height:1.5}
+
+  .main{padding:20px}
+
+  .hero{
+    border:1px solid #2a2a2a;
+    border-radius:18px;
+    padding:16px;
+    background:linear-gradient(145deg,rgba(16,16,16,.97),rgba(8,8,8,.95));
+    box-shadow:0 18px 40px rgba(0,0,0,.45);
+    position:relative;
+    overflow:hidden
+  }
+  .hero:before{
+    content:'';
+    position:absolute; right:-80px; top:-80px;
+    width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle,rgba(239,27,27,.22),transparent 65%)
+  }
+  .hero:after{
+    content:'';
+    position:absolute; left:-20%; top:0; width:140%; height:2px;
+    background:linear-gradient(90deg,transparent,rgba(239,27,27,.9),transparent);
+    animation:scan 3.5s linear infinite; opacity:.8
+  }
+
+  .heroTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative;z-index:1}
+  .heroGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;align-items:stretch;position:relative;z-index:1}
+
+  .robotCard{
+    border:1px solid #2a2a2a;
+    background:linear-gradient(160deg,rgba(15,15,15,.96),rgba(8,8,8,.95));
+    border-radius:16px;
+    padding:10px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:230px
+  }
+  .robotVid{
+    width:100%;height:170px;object-fit:cover;border-radius:12px;
+    border:1px solid #2a2a2a;box-shadow:0 10px 28px rgba(0,0,0,.35)
+  }
+
+  .chipRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .chip{
+    font-size:11px;padding:6px 10px;border-radius:999px;
+    border:1px solid #3a1a1a;background:#170d0d;color:#ffd5d5
+  }
+
+  h1{margin:0;font-size:34px;font-family:'Orbitron',sans-serif;letter-spacing:.4px}
+  .sub{margin-top:6px;color:var(--muted)}
+
+  .clock{
+    font-size:12px;background:rgba(239,27,27,.12);border:1px solid rgba(239,27,27,.35);
+    padding:8px 12px;border-radius:999px;color:#ffd8d8;font-family:'JetBrains Mono',monospace
+  }
+  .scanBadge{
+    font-size:11px;color:#ffe2e2;border:1px solid rgba(239,27,27,.38);
+    padding:7px 10px;border-radius:999px;background:rgba(239,27,27,.10);
+    font-family:'JetBrains Mono',monospace
+  }
+
+  .actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1}
+  .btn{
+    display:inline-flex;gap:6px;align-items:center;padding:9px 12px;border-radius:10px;
+    text-decoration:none;color:#fff;background:linear-gradient(135deg,#ef1b1b,#a10f0f);
+    border:1px solid rgba(255,255,255,.08);transition:.2s
+  }
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+
+  .cards{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:14px 0}
+  .card{
+    background:linear-gradient(180deg,rgba(18,18,18,.97),rgba(10,10,10,.95));
+    border:1px solid var(--line);border-radius:14px;padding:12px;
+    animation:rise .35s ease both;transition:.2s
+  }
+  .card:hover{transform:translateY(-2px);border-color:#ef1b1b}
+  .k{font-size:12px;color:var(--muted)}
+  .v{font-size:27px;font-weight:800}
+
+  .LOW{color:var(--green)}
+  .MEDIUM{color:#93c5fd}
+  .HIGH{color:var(--amber)}
+  .CRITICAL{color:var(--red);font-weight:800}
+  .IMMEDIATE{color:var(--red);font-weight:800}
+  .NORMAL{color:#93c5fd}
+  .HIGH_URG{color:var(--amber)}
+  .LOW_URG{color:var(--green)}
+
+  .mid{display:grid;grid-template-columns:1.2fr .8fr;gap:10px;margin-bottom:12px}
+  .panel{background:rgba(14,14,14,.95);border:1px solid var(--line);border-radius:14px;padding:12px}
+  .panel h3{margin:0 0 10px 0;color:#ffd1d1;font-size:13px;letter-spacing:.35px}
+
+  .bars .item{display:grid;grid-template-columns:160px 1fr 36px;gap:8px;align-items:center;margin:8px 0}
+  .bar{height:10px;border-radius:8px;background:#0e0e0e;border:1px solid #2a2a2a;overflow:hidden}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,#ff6666,#ef1b1b,#8f0e0e)}
+
+  .trend{display:flex;align-items:flex-end;gap:8px;height:160px}
+  .trend .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .trend .stick{
+    width:100%;max-width:34px;border-radius:10px 10px 4px 4px;
+    background:linear-gradient(180deg,#ff9c9c,#ef1b1b,#8f0e0e)
+  }
+  .trend .day{font-size:11px;color:#a9a9a9}
+
+  .tableBox{
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    background:rgba(10,10,10,.96);
+  }
+  .tools{
+    display:flex;justify-content:space-between;gap:10px;align-items:center;
+    padding:10px 12px;border-bottom:1px solid #222;background:#121212;flex-wrap:wrap
+  }
+  .tools h3{margin:0;color:#ffd1d1;font-size:13px}
+  .inp,.sel{
+    background:#0b0b0b;border:1px solid #2a2a2a;color:#f0f0f0;
+    border-radius:9px;padding:7px 10px
+  }
+  table{width:100%;border-collapse:collapse}
+  thead th{
+    position:sticky;top:0;background:linear-gradient(180deg,#2a0f0f,#170909);
+    color:#ffd1d1;font-size:11.5px;letter-spacing:.3px;text-transform:uppercase;
+    border-bottom:1px solid #3a1a1a
+  }
+  th,td{padding:10px;border-bottom:1px solid #1e1e1e;font-size:13px;text-align:left}
+  td:nth-child(1), td:nth-child(3), td:nth-child(9){font-family:'JetBrains Mono',monospace;font-size:12px}
+  tbody tr:hover{background:rgba(239,27,27,.06)}
+
+  .water{position:fixed;right:10px;bottom:7px;color:rgba(255,255,255,.28);font-size:11px}
+  .reveal{opacity:0;transform:translateY(10px);transition:.35s ease}
+  .reveal.show{opacity:1;transform:none}
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(220px)}}
+  @keyframes rise{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  @media (max-width:1300px){
+    .cards{grid-template-columns:repeat(4,1fr)}
+    .mid{grid-template-columns:1fr}
+    .heroGrid{grid-template-columns:1fr}
+    .layout{grid-template-columns:1fr}
+    .sidebar{height:auto;position:relative}
+  }
+  @media (max-width:760px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+    h1{font-size:28px}
+  }
+</style>
+</head>
+<body>
+<div id="preloader" class="preloader"><div class="orb"></div><div class="preTxt">Launching ThreatLens Command Center...</div></div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">
+  <img src="/static/samuel-logo.png" alt="Samuel logo" style="width:52px;height:52px;object-fit:contain;border-radius:12px;">
+  <div>Samuel's Trusted Cloud</div>
+</div>
+    <div class="nav">
+      <a href="#overview">SOC Overview</a>
+      <a href="#feed">Live Threat Feed</a>
+      <a href="#intel">Sector Intelligence</a>
+      <a href="#reports">Reports</a>
+    </div>
+    <div class="sideMeta">
+      Team: <b>PHASER</b><br>
+      Mode: Defensive Monitoring<br>
+      TZ: US/Eastern
+    </div>
+  </aside>
+
+  <main class="main">
+    <section id="overview" class="hero reveal">
+      <div class="heroGrid">
+        <div>
+          <div class="heroTop">
+            <div>
+              <h1>Samuel's Threat Dashboard</h1>
+              <div class="sub">Auto scan every {{ interval }} min • Confidence / Severity / Urgency based triage</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <div class="water">ThreatLens • Team PHASER</div>
+              <div id="liveClock" class="clock">LIVE • --:--:-- ET</div>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="btn" href="/run">▶ Run Scan</a>
+            <a class="btn" href="/demo/reset">↺ Reset Demo</a>
+            <a class="btn" href="/report/csv">⬇ CSV</a>
+            <a class="btn" href="/report/txt">⬇ TXT</a>
+          </div>
+        </div>
+
+        <div class="robotCard">
+          <video class="robotVid" autoplay muted loop playsinline>
+            <source src="/static/robot.mp4" type="video/mp4">
+          </video>
+          <div class="chipRow">
+            <span class="chip">AI AGENT</span>
+            <span class="chip">LIVE TRIAGE</span>
+            <span class="chip">AUTO ALERTS</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cards reveal">
+      <div class="card"><div class="k">Total</div><div class="v">{{ stats.total }}</div></div>
+      <div class="card"><div class="k">Critical</div><div class="v CRITICAL">{{ stats.critical }}</div></div>
+      <div class="card"><div class="k">High</div><div class="v HIGH">{{ stats.high }}</div></div>
+      <div class="card"><div class="k">Medium</div><div class="v MEDIUM">{{ stats.medium }}</div></div>
+      <div class="card"><div class="k">Low</div><div class="v LOW">{{ stats.low }}</div></div>
+      <div class="card"><div class="k">Top Source</div><div class="v" style="font-size:15px">{{ stats.top_source }}</div></div>
+      <div class="card"><div class="k">Top Sector</div><div class="v" style="font-size:15px">{{ stats.top_sector }}</div></div>
+    </section>
+
+    <section id="intel" class="mid reveal">
+      <div class="panel bars">
+        <h3>Sector Distribution</h3>
+        {% set maxc = (sectors[0].count if sectors else 1) %}
+        {% for s in sectors %}
+        <div class="item"><div>{{ s.sector }}</div><div class="bar"><i style="width:{{ (s.count*100/maxc)|round(0) }}%"></i></div><div>{{ s.count }}</div></div>
+        {% endfor %}
+      </div>
+      <div class="panel">
+        <h3>7-Day Trend</h3>
+        <div class="trend">
+          {% set maxv = (trend|map(attribute='count')|max if trend else 1) %}
+          {% for t in trend %}
+          <div class="col"><div class="stick" style="height:{{ ((t.count*120/maxv) if maxv>0 else 6)|round(0) }}px"></div><div class="day">{{ t.day[5:] }}</div></div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="feed" class="tableBox reveal">
+      <div class="tools">
+        <h3>Live Threat Feed</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="searchBox" class="inp" placeholder="Search title/source/sector">
+          <select id="severityFilter" class="sel">
+            <option value="">All Severities</option><option>CRITICAL</option><option>HIGH</option><option>MEDIUM</option><option>LOW</option>
+          </select>
+        </div>
+      </div>
+      <table id="eventTable">
+        <thead><tr><th>ID</th><th>Severity</th><th>Score</th><th>Confidence</th><th>Urgency</th><th>Sector</th><th>Source</th><th>Title</th><th>Time</th></tr></thead>
+        <tbody>
+          {% for e in events %}
+          <tr>
+            <td>{{ e.id }}</td>
+            <td class="{{ e.severity }} sev">{{ e.severity }}</td>
+            <td>{{ e.score }}</td>
+            <td>{{ e.confidence or '-' }}</td>
+            <td class="{{ 'IMMEDIATE' if e.urgency=='IMMEDIATE' else ('HIGH_URG' if e.urgency=='HIGH' else ('NORMAL' if e.urgency=='NORMAL' else 'LOW_URG')) }}">{{ e.urgency or '-' }}</td>
+            <td class="sector">{{ e.sector or 'General' }}</td>
+            <td class="source">{{ e.source }}</td>
+            <td class="titleTxt">{{ e.title }}</td>
+            <td class="ts" data-utc="{{ e.created_at }}">{{ e.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+    <section id="reports" class="panel reveal" style="margin-top:12px;">
+      <h3>Reports & Export</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <a class="btn" href="/report/csv">⬇ Download CSV Report</a>
+        <a class="btn" href="/report/txt">⬇ Download TXT Report</a>
+        <a class="btn" href="/run">↻ Refresh Scan</a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="water">ThreatLens • Team PHASER</div>
+
+<script>
+window.addEventListener('load', () =>
+  setTimeout(() => document.getElementById('preloader').classList.add('hide'), 420)
+);
+
+function tickET() {
+  const t = new Date().toLocaleTimeString('en-US', {
+    timeZone: 'America/New_York',
+    hour12: false
+  });
+  document.getElementById('liveClock').textContent = `LIVE • ${t} ET`;
+}
+
+tickET();
+setInterval(tickET, 1000);
+
+function fmtTime(str) {
+  const d = new Date(str.replace(' ', 'T') + 'Z');
+  if (isNaN(d.getTime())) return str;
+
+  return d.toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }).replace(',', '') + ' ET';
+}
+
+document.querySelectorAll('.ts').forEach(td => {
+  td.textContent = fmtTime(td.dataset.utc || td.textContent.trim());
+});
+
+const searchBox=document.getElementById('searchBox');
+const severityFilter=document.getElementById('severityFilter');
+function applyFilter(){
+  const q=(searchBox.value||'').toLowerCase();
+  const sev=severityFilter.value;
+  document.querySelectorAll('#eventTable tbody tr').forEach(tr=>{
+    const txt=(tr.querySelector('.titleTxt').textContent+' '+tr.querySelector('.source').textContent+' '+tr.querySelector('.sector').textContent).toLowerCase();
+    const s=tr.querySelector('.sev').textContent.trim();
+    tr.style.display=(!q||txt.includes(q))&&(!sev||s===sev)?'':'none';
+  });
+}
+searchBox.addEventListener('input',applyFilter);
+severityFilter.addEventListener('change',applyFilter);
+// sidebar nav active + section reveal
+const navLinks = [...document.querySelectorAll('.nav a')];
+const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+function setActiveByHash(hash){
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === hash));
+}
+
+navLinks.forEach(a => {
+  a.addEventListener('click', () => setActiveByHash(a.getAttribute('href')));
+});
+setActiveByHash(location.hash || '#overview');
+
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('show');
+      const id = '#' + e.target.id;
+      if(id && navLinks.find(n=>n.getAttribute('href')===id)) setActiveByHash(id);
+    }
+  });
+},{threshold:.25});
+
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+setInterval(()=>location.reload(),90000);
+</script>
+</body>
+</html>
